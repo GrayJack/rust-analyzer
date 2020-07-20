@@ -553,7 +553,46 @@ fn highlight_element(
         T![!] if element.parent().and_then(ast::MacroCall::cast).is_some() => {
             Highlight::new(HighlightTag::Macro)
         }
-        p if p.is_punct() => HighlightTag::Punctuation.into(),
+        p if p.is_punct() => match p {
+            T![+]
+            | T![-]
+            | T![*]
+            | T![/]
+            | T![%]
+            | T![&]
+            | T![|]
+            | T![^]
+            | T![!]
+            | T![=]
+            | T![<]
+            | T![>]
+            | T![&&]
+            | T![||]
+            | T![<=]
+            | T![>=]
+            | T![==]
+            | T![!=]
+            | T![<<]
+            | T![>>]
+            | T![::]
+            | T![->]
+            | T![=>]
+            | T![..]
+            | T![...]
+            | T![..=]
+            | T![+=]
+            | T![-=]
+            | T![*=]
+            | T![/=]
+            | T![%=]
+            | T![&=]
+            | T![|=]
+            | T![^=]
+            | T![<<=]
+            | T![>>=] => HighlightTag::Operator.into(),
+            T![@] => HighlightTag::Operator | HighlightModifier::ControlFlow,
+            _ => HighlightTag::Punctuation.into(),
+        },
 
         k if k.is_keyword() => {
             let h = Highlight::new(HighlightTag::Keyword);
