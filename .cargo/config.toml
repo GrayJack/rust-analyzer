@@ -1,5 +1,6 @@
 [alias]
 xtask = "run --package xtask --bin xtask --"
+install-ra = "run --package xtask --bin xtask -- install"
 tq = "test -- -q"
 qt = "tq"
 lint = "clippy --all-targets -- --cap-lints warn"

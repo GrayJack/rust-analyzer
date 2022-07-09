@@ -134,7 +134,10 @@ fn punctuation(
                 HlPunct::MacroBang.into()
             }
         }
-        (T![!], MACRO_RULES) => HlPunct::MacroBang.into(),
+        (T![::] | T![->] | T![=>] | T![..] | T![..=] | T![=] | T![@] | T![.], _) => {
+            HlOperator::Other.into()
+        }
+        (T![!], MACRO_CALL | MACRO_RULES) => HlPunct::MacroBang.into(),
         (T![!], NEVER_TYPE) => HlTag::BuiltinType.into(),
         (T![!], PREFIX_EXPR) => HlOperator::Logical.into(),
         (T![*], PTR_TYPE) => HlTag::Keyword.into(),
@@ -149,6 +152,7 @@ fn punctuation(
                 h
             }
         }
+        (T![-], LITERAL_PAT) => HlTag::NumericLiteral.into(),
         (T![-], PREFIX_EXPR) => {
             let prefix_expr =
                 operator_parent.and_then(ast::PrefixExpr::cast).and_then(|e| e.expr());
@@ -274,6 +278,10 @@ fn keyword(token: SyntaxToken, kind: SyntaxKind) -> Highlight {
         T![true] | T![false] => HlTag::BoolLiteral.into(),
         // crate is handled just as a token if it's in an `extern crate`
         T![crate] if parent_matches::<ast::ExternCrate>(&token) => h,
+        T![ref] => match token.parent().and_then(ast::IdentPat::cast) {
+            Some(ident) if sema.is_unsafe_ident_pat(&ident) => h | HlMod::Unsafe,
+            _ => h,
+        },
         _ => h,
     }
 }
