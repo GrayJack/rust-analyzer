@@ -109,7 +109,7 @@ fn punctuation(
             }
             _ => HlOperator::Other.into(),
         },
-        (T![::] | T![->] | T![=>] | T![=] | T![@] | T![.], _) => HlOperator::Other.into(),
+        (T![::] | T![->] | T![=>] | T![=] | T![@], _) => HlOperator::Other.into(),
         (T![!], MACRO_CALL) => {
             if operator_parent
                 .and_then(ast::MacroCall::cast)
