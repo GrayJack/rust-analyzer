@@ -257,6 +257,7 @@ fn keyword(token: SyntaxToken, kind: SyntaxKind) -> Highlight {
         T![true] | T![false] => HlTag::BoolLiteral.into(),
         // crate is handled just as a token if it's in an `extern crate`
         T![crate] if parent_matches::<ast::ExternCrate>(&token) => h,
+        T![macro_rules] => Highlight::new(HlTag::Symbol(SymbolKind::Macro)),
         _ => h,
     }
 }
