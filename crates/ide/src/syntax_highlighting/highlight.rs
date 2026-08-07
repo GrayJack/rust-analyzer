@@ -258,6 +258,7 @@ fn keyword(token: SyntaxToken, kind: SyntaxKind) -> Highlight {
         // crate is handled just as a token if it's in an `extern crate`
         T![crate] if parent_matches::<ast::ExternCrate>(&token) => h,
         T![macro_rules] => Highlight::new(HlTag::Symbol(SymbolKind::Macro)),
+        T![cfg] | T![cfg_attr] => Highlight::new(HlTag::Symbol(SymbolKind::Attribute)),
         _ => h,
     }
 }
